@@ -1,0 +1,29 @@
+.carousel-container{
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.carousel-wrapper{
+	transform: translate3d(0,0,0);
+	position: relative;
+	z-index: 1;
+	overflow: hidden;
+	transition-property: transform;
+	&:before,&:after{
+		display: table;
+		clear: both;
+	}
+}
+
+.carousel-slide{
+	text-align: center;
+	font-size: 18px;
+	background: #fff;
+	position: relative;
+	float:left;
+	display: block;
+	width: 100%;
+}
+
