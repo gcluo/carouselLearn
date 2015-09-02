@@ -148,16 +148,15 @@
   var touchend = 'ontouchend' in window ? "touchend" : "mouseup";
   var touchstrat = 'ontouchstart' in window ? "touchstrat" : "mousedown";
   var touchmove = 'ontouchmove' in window ? "touchmove" : "mousemove";
-  var startX,endX,moveX,endMove = 0;
+  var startX,moveX,endMoveX = 0;
 
   $(document).on(touchstrat,".carousel-slide",function(e){
   	startX = e.clientX;
   });
 
   $(document).on(touchend,".carousel-slide",function(e){
-  	endX = e.clientX;
   	startX = null;
-  	endMove = endMove + moveX;
+  	endMoveX = endMoveX + moveX;
   	//释放鼠标时移动距离如果大于50px就自动切换到下一张
   	//小于50就回到初始位置
   	var active = findActive();
@@ -167,14 +166,17 @@
   		if(moveX < 0 && checkNext()){
   			changeNextActive();
   			var nextX = next[0].offsetLeft;
-	  		$(".carousel-slide").css("transform","translateX("+(0 - nextX)+"px)");
-	  		endMove = 0 - nextX;
+	  		$(".carousel-slide").css("transform","translateX("+(-nextX)+"px)");
+	  		endMoveX = -nextX;
 	  	}else if(moveX > 0 && checkPrev()){
 	  		changePreActive();
 	  		var prevX = prev[0].offsetLeft;
-	  		$(".carousel-slide").css("transform","translateX("+(0 - prevX)+"px)");
-	  		endMove = 0 - prevX;
+	  		$(".carousel-slide").css("transform","translateX("+(-prevX)+"px)");
+	  		endMoveX = -prevX;
 	  	}
+  	}else{
+	  	$(".carousel-slide").css("transform","translateX("+(endMoveX - moveX)+"px)");
+	  	endMoveX = endMoveX - moveX; 		
   	}
 
   });
@@ -185,15 +187,11 @@
   	}
   	moveX = e.clientX - startX;
   	if(moveX < 0 && checkNext()){
-  		$(".carousel-slide").css("transform","translateX("+(endMove+moveX)+"px)");
+  		$(".carousel-slide").css("transform","translateX("+(endMoveX+moveX)+"px)");
   	}else if(moveX > 0 && checkPrev()){
-  		$(".carousel-slide").css("transform","translateX("+(endMove+moveX)+"px)");
+  		$(".carousel-slide").css("transform","translateX("+(endMoveX+moveX)+"px)");
   	}
-
-  	// if(moveX != 0 && (checkPrev() || checkNext())){
-  	// 	$(".carousel-slide").css("transform","translateX("+(endMove+moveX)+"px)");
-  	// }
-  	
+  	console.log(moveX);
   	
   });
 
