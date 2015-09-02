@@ -26,7 +26,7 @@
   }
 
   /**
-   * 初始化的时候默认中间的图片为显示第一张
+   * 初始化的时候默认中间的图片为显示第一张【由于为了简单起见，直接返回1，默认为第一张】
    * @return {[type]} [description]
    */
   function findMidIndex(){
@@ -136,6 +136,10 @@
   	console.log(widthSum);
   }
 
+  /**
+   * 初始化函数，为了简单起见，默认到第一张图片作为slide的开始，非3D所以不需要draw
+   * @return {[type]} [description]
+   */
   function init(){
   	initSetWidth();
   	initSetActive();
@@ -144,22 +148,31 @@
 
   init();
 
-  //触发拖动的事件
+  //触发拖动的事件如果是移动端就用touch，否则使用鼠标事件
   var touchend = 'ontouchend' in window ? "touchend" : "mouseup";
   var touchstrat = 'ontouchstart' in window ? "touchstrat" : "mousedown";
   var touchmove = 'ontouchmove' in window ? "touchmove" : "mousemove";
   var startX,moveX,endMoveX = 0;
 
+  /**
+   * 获取最开始时候点击的坐标
+   * @param  {[type]} e){               	startX [description]
+   * @return {[type]}      [description]
+   */
   $(document).on(touchstrat,".carousel-slide",function(e){
   	startX = e.clientX;
   });
 
+  /**
+   * 在结束的时候判断到底是否切换到下一个slide
+   * @param  {[type]} e){               	startX [将开始点击获取的坐标清空]
+   * @return {[type]}      [description]
+   */
   $(document).on(touchend,".carousel-slide",function(e){
   	startX = null;
   	endMoveX = endMoveX + moveX;
   	//释放鼠标时移动距离如果大于50px就自动切换到下一张
   	//小于50就回到初始位置
-  	var active = findActive();
   	var next = findNext();
   	var prev = findPrev();
   	if(Math.abs(moveX) > 50){
@@ -181,6 +194,11 @@
 
   });
 
+  /**
+   * touch的时候让图片跟随鼠标走动
+   * @param  {[type]} e){               	if(!startX){  		return;  	}  	moveX [如果鼠标没有点击那么就不触发]
+   * @return {[type]}      [不触发的时候直接返回]
+   */
   $(document).on(touchmove,".carousel-slide",function(e){
   	if(!startX){
   		return;
